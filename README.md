@@ -35,13 +35,21 @@ A aplicação segue uma arquitetura em camadas para garantir a separação de re
 
 /src
 ├── config          # Configurações gerais (ex: banco de dados, JWT)
+
 ├── controllers     # Lógica de controle das requisições HTTP
+
 ├── database        # Scripts de criação do banco (SQL)
+
 ├── middlewares     # Funções de middleware (ex: validações, autenticação JWT)
+
 ├── models          # Camada de acesso aos dados (interação com o banco)
+
 ├── routes          # Definição das rotas da API
+
 └── services        # Regras de negócio da aplicação
+
 /tests              # Testes (ex: usando REST Client ou similar)
+
 4. Banco de Dados e Entidades Obrigatórias 💾
 Database: pets_db
 
@@ -146,62 +154,19 @@ ESLint
 Prettier
 📦 Instalação e Execução
 Clone o repositório:
-Bash
+
 
 git clone https://github.com/Gian-vie/API-petshop.git
 cd API-petshop
 Instale as dependências:
-Bash
+
 
 npm install
 Configure as variáveis de ambiente:
 Crie um arquivo .env na raiz do projeto, baseado no arquivo .env.example (se houver).
 Preencha com as configurações do banco de dados, segredo do JWT, etc.
 Execute o servidor de desenvolvimento:
-Bash
+
 
 npm run dev
 A API estará disponível em http://localhost:PORTA (verifique a porta configurada).
-📊 Estrutura do Banco de Dados (Exemplo SQL)
-SQL
-
--- Script para PostgreSQL (adapte para seu SGBD)
-
-CREATE DATABASE pets_db;
-
--- Conecte-se ao banco pets_db antes de rodar o restante
-
-CREATE TYPE user_role AS ENUM ('admin', 'adopter');
-CREATE TYPE pet_status AS ENUM ('available', 'adopted');
-CREATE TYPE pet_size_enum AS ENUM ('small', 'medium', 'large');
-
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL,
-    phone TEXT,
-    role user_role NOT NULL DEFAULT 'adopter'
-);
-
-CREATE TABLE pets (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    age INTEGER,
-    species TEXT NOT NULL,
-    size pet_size_enum,
-    status pet_status NOT NULL DEFAULT 'available',
-    description TEXT
-);
-
-CREATE TABLE adoptions (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    pet_id INTEGER REFERENCES pets(id) ON DELETE RESTRICT, -- Não deletar pet se estiver em uma adoção
-    adoption_date DATE NOT NULL DEFAULT CURRENT_DATE,
-    UNIQUE (user_id, pet_id) -- Um usuário não pode adotar o mesmo pet múltiplas vezes
-);
-
--- Índices para otimização de buscas (opcional, mas recomendado)
-CREATE INDEX idx_pets_status ON pets(status);
-CREATE INDEX idx_users_email ON users(email);
