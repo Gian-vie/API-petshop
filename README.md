@@ -148,8 +148,8 @@ Prettier
 Clone o repositório:
 Bash
 
-git clone https://github.com/seu-usuario/api-adocao-pets.git
-cd api-adocao-pets
+git clone https://github.com/Gian-vie/API-petshop.git
+cd API-petshop
 Instale as dependências:
 Bash
 
