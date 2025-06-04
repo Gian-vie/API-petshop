@@ -1,0 +1,23 @@
+{
+  "name": "api-petshop",
+  "version": "1.0.0",
+  "description": "🐾 API de Adoção de Pets\r Bem-vindo à API de Adoção de Pets! Este projeto visa fornecer uma plataforma robusta e amigável para conectar animais de estimação em busca de um lar com seus futuros tutores.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gian-vie/API-petshop.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gian-vie/API-petshop/issues"
+  },
+  "homepage": "https://github.com/Gian-vie/API-petshop#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

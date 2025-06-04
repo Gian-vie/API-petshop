@@ -35,17 +35,11 @@ A aplicação segue uma arquitetura em camadas para garantir a separação de re
 
 /src
 ├── config          # Configurações gerais (ex: banco de dados, JWT)
-
 ├── controllers     # Lógica de controle das requisições HTTP
-
 ├── database        # Scripts de criação do banco (SQL)
-
 ├── middlewares     # Funções de middleware (ex: validações, autenticação JWT)
-
 ├── models          # Camada de acesso aos dados (interação com o banco)
-
 ├── routes          # Definição das rotas da API
-
 └── services        # Regras de negócio da aplicação
 
 /tests              # Testes (ex: usando REST Client ou similar)
@@ -155,18 +149,15 @@ Prettier
 📦 Instalação e Execução
 Clone o repositório:
 
-
 git clone https://github.com/Gian-vie/API-petshop.git
 cd API-petshop
 Instale as dependências:
-
 
 npm install
 Configure as variáveis de ambiente:
 Crie um arquivo .env na raiz do projeto, baseado no arquivo .env.example (se houver).
 Preencha com as configurações do banco de dados, segredo do JWT, etc.
 Execute o servidor de desenvolvimento:
-
 
 npm run dev
 A API estará disponível em http://localhost:PORTA (verifique a porta configurada).
