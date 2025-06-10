@@ -180,7 +180,7 @@ A aplicação segue uma arquitetura em camadas para garantir a separação de re
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/Gian-vie/API-petshop.git](https://github.com/Gian-vie/API-petshop.git)
+    git clone https://github.com/Gian-vie/API-petshop.git
     cd API-petshop
     ```
 2.  **Instale as dependências:**
