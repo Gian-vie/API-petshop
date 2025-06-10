@@ -169,8 +169,7 @@ A aplicação segue uma arquitetura em camadas para garantir a separação de re
 
 - Node.js
 - Express.js (ou framework similar)
-- \[Nome do seu ORM/Driver de Banco de Dados, ex: Sequelize, Knex, node-postgres]
-- PostgreSQL (ou o SGBD que você está usando)
+- MySQL
 - JSON Web Token (JWT)
 - Bcrypt.js
 - ESLint
