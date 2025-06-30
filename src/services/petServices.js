@@ -1,36 +1,29 @@
-const bcrypt = require('bcryptjs');
-const petModel = require('../models/petsModel');
+const petModel = require("../models/petModel");
 
-const createPet = async (userData) => {
+const createPet = async (petData) => {
   // Verifica se o e-mail já está em uso
-  const existingUser = await petModel.findByEmail(userData.email);
-  if (existingUser) {
-    throw new Error('Este e-mail já está cadastrado');
+  const existingPet = await petModel.findById(petData.name);
+  if (existingPet) {
+    throw new Error("Este pet ja esta cadastrado");
   }
 
-  // Criptografa a senha antes de salvar
-  const hashedPassword = await bcrypt.hash(userData.password, 10); // 10 é o "salt rounds"
-
-  // Substitui a senha original pela hasheada
-  const newUser = {
-    ...userData,
-    password: hashedPassword,
-    role: userData.role || 'adopter', // Define 'adopter' como padrão se não for fornecido
-  };
-
-  return petModel.create(newUser);
+  return petModel.create(petData);
 };
 
 // Outros serviços podem ser mais diretos, chamando o model correspondente
 const getAllPets = () => petModel.findAll();
 const getPetById = (id) => petModel.findById(id);
-const getAvailablePets = () => petModel.findAvailable()
+const getAvailablePets = () => petModel.findAvailable();
 const deletePet = async (id) => {
-    let pet = petModel.findById(id)
-    if(pet.status === 'adopted'){
-        throw new Error ("Pets adotados não podem ser removidos")
-    }
-    petModel.remove(id)};
+  const pet = await petModel.findById(id);
+  if (!pet) {
+    throw new Error("Pet não encontrado");
+  }
+  if (pet.status === "adopted") {
+    throw new Error('Pets com status "adopted" não podem ser removidos.');
+  }
+  return petModel.remove(id);
+};
 const updatePet = (id, userData) => petModel.update(id, userData);
 
 module.exports = {
@@ -39,5 +32,5 @@ module.exports = {
   getPetById,
   getAvailablePets,
   updatePet,
-  deletePet
+  deletePet,
 };

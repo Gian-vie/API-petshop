@@ -42,7 +42,7 @@ const isAdopter = (req, res, next) => {
 const isSelfOrAdmin = (req, res, next) => {
   const { id: targetUserId } = req.params; // ID do usuário que se quer acessar/modificar
   const { userId: requesterId, role: requesterRole } = req.user; // ID e role de quem faz a requisição
-
+console.log(String(requesterId), targetUserId)
   if (requesterRole === 'admin' || String(requesterId) === String(targetUserId)) {
     next();
   } else {

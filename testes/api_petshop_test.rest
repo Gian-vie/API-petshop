@@ -1,0 +1,190 @@
+### Variáveis Globais
+# Define a URL base da API e captura tokens e IDs para reuso.
+@baseUrl = http://localhost:3000
+@adopterToken =
+@adminToken =
+@adopterId =
+@adminId =
+@petId =
+
+
+################################################################################
+# PARTE 1: CRIAÇÃO DE USUÁRIOS E AUTENTICAÇÃO
+################################################################################
+
+### (SUCESSO) Criar um novo usuário ADOPTER
+# @name createAdopter
+# Captura o ID do adopter recém-criado
+@adopterId = {{createAdopter.response.body.id}}
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "name": "Fulano Adotante",
+    "email": "fulano.adotante2@test.com",
+    "password": "password123",
+    "phone": "5551999998888"
+}
+
+### (SUCESSO) Criar um novo usuário ADMIN
+# @name createAdmin
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "name": "Ciclano Admin",
+    "email": "ciclano.admin@test.com",
+    "password": "password456",
+    "phone": "5551988889999",
+    "role": "admin"
+}
+###
+# Captura o ID do admin recém-criado
+@adminId = {{createAdmin.response.body.id}}
+
+
+### (FALHA ESPERADA) Tentar criar usuário com e-mail que já existe
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "name": "Outro Fulano",
+    "email": "fulano.adotante@test.com",
+    "password": "password123"
+}
+
+
+### (SUCESSO) Login como ADOPTER para obter o token
+# @name loginAdopter
+@adopterToken = {{loginAdopter.response.body.token}}
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "email": "fulano.adotante@test.com",
+    "password": "password123"
+}
+
+### (SUCESSO) Login como ADMIN para obter o token
+# @name loginAdmin
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "email": "ciclano.admin@test.com",
+    "password": "password456"
+}
+###
+# Captura o token do admin
+@adminToken = {{loginAdmin.response.body.token}}
+
+
+################################################################################
+# PARTE 2: GERENCIAMENTO DE PETS (ADMIN) E LISTAGEM PÚBLICA
+################################################################################
+
+### (SUCESSO) Admin cria um novo pet para adoção
+# @name createPet
+POST {{baseUrl}}/pets
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+    "name": "Fido2",
+    "age": 3,
+    "species": "dog",
+    "size": "medium",
+    "description": "Amigável e adora brincar."
+}
+###
+# Captura o ID do pet recém-criado
+@petId = {{createPet.response.body.id}}
+
+
+### (FALHA ESPERADA) Adopter tenta criar um pet (não tem permissão)
+POST {{baseUrl}}/pets
+Content-Type: application/json
+Authorization: Bearer {{adopterToken}}
+
+{
+    "name": "Gato Furtivo",
+    "age": 2,
+    "species": "cat",
+    "size": "small"
+}
+
+
+### (SUCESSO) Listar todos os pets (requer admin)
+GET {{baseUrl}}/pets
+Authorization: Bearer {{adminToken}}
+
+
+### (SUCESSO) Listar pets DISPONÍVEIS (rota pública, não precisa de token)
+GET {{baseUrl}}/pets/available
+
+
+################################################################################
+# PARTE 3: FLUXO DE ADOÇÃO E TESTE DE REGRAS
+################################################################################
+
+### (SUCESSO) Adopter adota o pet "Fido"
+POST {{baseUrl}}/adoptions
+Content-Type: application/json
+Authorization: Bearer {{adopterToken}}
+
+{
+    "petId": "{{petId}}"
+}
+
+
+### (FALHA ESPERADA) Adopter tenta adotar o mesmo pet novamente
+POST {{baseUrl}}/adoptions
+Content-Type: application/json
+Authorization: Bearer {{adopterToken}}
+
+{
+    "petId": "{{petId}}"
+}
+
+
+### (FALHA ESPERADA) Pet "Fido" não aparece mais na lista de disponíveis
+GET {{baseUrl}}/pets/available
+
+
+### (FALHA ESPERADA) Admin tenta deletar um pet que já foi ADOTADO
+DELETE {{baseUrl}}/pets/{{petId}}
+Authorization: Bearer {{adminToken}}
+
+
+################################################################################
+# PARTE 4: TESTE DE PERMISSÕES DE ACESSO
+################################################################################
+
+### (SUCESSO) Adopter busca seu próprio perfil
+GET {{baseUrl}}/users/{{adopterId}}
+Authorization: Bearer {{adopterToken}}
+
+
+### (FALHA ESPERADA) Adopter tenta buscar o perfil do Admin
+GET {{baseUrl}}/users/{{adminId}}
+Authorization: Bearer {{adopterToken}}
+
+
+### (SUCESSO) Admin busca o perfil do Adopter
+GET {{baseUrl}}/users/{{adopterId}}
+Authorization: Bearer {{adminToken}}
+
+
+### (SUCESSO) Admin lista todos os usuários do sistema
+GET {{baseUrl}}/users
+Authorization: Bearer {{adminToken}}
+
+
+### (FALHA ESPERADA) Adopter tenta listar todos os usuários do sistema
+GET {{baseUrl}}/users
+Authorization: Bearer {{adopterToken}}
+
+
+### (SUCESSO) Admin lista todas as adoções realizadas
+GET {{baseUrl}}/adoptions
+Authorization: Bearer {{adminToken}}
