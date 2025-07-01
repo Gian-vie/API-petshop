@@ -21,7 +21,7 @@ Content-Type: application/json
 
 {
     "name": "Fulano Adotante",
-    "email": "fulano.adotante2@test.com",
+    "email": "fulano.adotante@test.com",
     "password": "password123",
     "phone": "5551999998888"
 }
@@ -90,7 +90,7 @@ Content-Type: application/json
 Authorization: Bearer {{adminToken}}
 
 {
-    "name": "Fido2",
+    "name": "Fido3",
     "age": 3,
     "species": "dog",
     "size": "medium",
