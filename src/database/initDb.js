@@ -1,12 +1,21 @@
-const DATABASE = `
+const mysql = require("mysql2");
+
+const connection = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "", 
+  multipleStatements: true
+});
+
+const sql = `
 -- Criação do Banco de Dados
-CREATE DATABASE pets_db;
+CREATE DATABASE IF NOT EXISTS pets_db;
 
 -- Seleciona o banco de dados para uso
 USE pets_db;
 
 -- Estrutura da tabela "users"
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
@@ -16,7 +25,7 @@ CREATE TABLE users (
 );
 
 -- Estrutura da tabela "pets"
-CREATE TABLE pets (
+CREATE TABLE IF NOT EXISTS pets (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   age INT,
@@ -27,7 +36,7 @@ CREATE TABLE pets (
 );
 
 -- Estrutura da tabela "adoptions"
-CREATE TABLE adoptions (
+CREATE TABLE IF NOT EXISTS adoptions (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   pet_id INT NOT NULL,
@@ -36,4 +45,13 @@ CREATE TABLE adoptions (
   FOREIGN KEY (pet_id) REFERENCES pets(id) ON DELETE RESTRICT,
   UNIQUE KEY unique_adoption (user_id, pet_id)
 );
-`
+`;
+
+connection.query(sql, (err, results) => {
+  if (err) {
+    console.error("Erro ao criar banco de dados:", err);
+  } else {
+    console.log("Banco de dados e tabelas criados com sucesso!");
+  }
+  connection.end();
+});
